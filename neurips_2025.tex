@@ -1,0 +1,712 @@
+\documentclass{article}
+\usepackage{comment} % In the preamble
+
+\usepackage{iftex}
+
+\ifLuaTeX
+
+  % IT IS ABSOLUTELY INSANE THAT WE NEED TO DO ALL THIS JUNK TO GET UTF8 FONTS IN MINTED
+  \usepackage{newtxtext,newtxmath}
+
+  \usepackage{fontspec}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+  % Create a font family for DejaVu Sans Mono
+  \newfontfamily{\DejaVuSansMono}{DejaVu Sans Mono}
+
+  % Save the current monospace font first
+  \let\oldttfamily\ttfamily
+  \let\originalttdefault\ttdefault
+
+  % Set DejaVu as the global monospace font
+  \setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+  
+  % Minted package
+  \usepackage{minted}
+  \usepackage{listings}
+  \usepackage{listingsutf8}
+  
+  % Restore the original monospace font after minted environments
+  \AtBeginEnvironment{minted}{}
+  \AtEndEnvironment{minted}{\let\ttfamily\oldttfamily}
+
+\else
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{newtxtext,newtxmath}
+  \usepackage{listings}
+  \usepackage{listingsutf8}
+  %\usepackage{minted}
+\fi
+
+% Define conditions
+\newif\ifnonanonymous
+\newif\ifuseappendix
+\newif\ifuseacknowledgement
+
+% ====================
+% CONDITIONAL SETTINGS
+% ====================
+\nonanonymoustrue % comment out to be anonymous
+\useacknowledgementtrue % comment out to remove acknowledgements
+\useappendixtrue % comment out to remove appendix
+% ====================
+
+\ifnonanonymous
+\usepackage[nonatbib,final]{neurips_2025}
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2025}
+\else
+\usepackage[nonatbib]{neurips_2025}
+% \usepackage[nonatbib,preprint]{neurips_2025}
+\fi
+
+
+
+\usepackage{xspace} 
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{graphicx}        % colors
+\usepackage[square,sort,comma,numbers]{natbib} 
+\usepackage[capitalize]{cleveref}
+
+\usepackage{tcolorbox}
+
+\newcommand{\ie}{i.e.\@\xspace}
+\newcommand{\eg}{e.g.\@\xspace}
+\newcommand{\etc}{etc.\@\xspace}
+\newcommand{\etal}{et al.\@\xspace}
+
+
+\definecolor{mintbg}{rgb}{0.95,0.95,0.92} % light beige background
+%\newminted{yaml}{
+%  fontsize=\footnotesize,
+%  breaklines,
+%  bgcolor=mintbg,
+%  frame=lines,
+%  framesep=2mm
+%}
+
+
+\usepackage{xcolor} % you already have this
+
+\lstset{
+  inputencoding=utf8,
+  extendedchars=true
+}
+
+% Define YAML language for listings
+\lstdefinelanguage{YAML}{
+  keywords={true,false,null,y,n,yes,no},
+  keywordstyle=\color{blue}\bfseries,
+  basicstyle=\ttfamily\footnotesize,
+  sensitive=true,
+  comment=[l]{\#},
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red!70!black},
+  morestring=[b]',
+  morestring=[b]",
+  morecomment=[l]{\#},
+}
+
+% Default style for listings
+\lstset{
+  language=YAML,
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{mintbg},
+  frame=lines,
+  framerule=0.3pt,
+  rulecolor=\color{black},
+  columns=fullflexible,
+  showstringspaces=false,
+  tabsize=4,
+  breaklines=true,
+  % --- magic to make the mathy symbols behave ---
+  literate=
+    {α}{{\ensuremath{\alpha}}}1
+    {β}{{\ensuremath{\beta}}}1
+    {τ}{{\ensuremath{\tau}}}1
+    {≤}{{\ensuremath{\le}}}1
+    {≥}{{\ensuremath{\ge}}}1
+    {∈}{{\ensuremath{\in}}}1
+    {ℝ}{{\ensuremath{\mathbb{R}}}}1
+}
+
+
+\lstnewenvironment{yamlcode}
+  {\lstset{language=YAML}}
+  {}
+
+
+
+\newcommand{\keywords}[1]{%
+    \par\addvspace\baselineskip % Adds vertical space
+    \noindent\textbf{Keywords:}\quad % Prints "Keywords:" in bold
+    \ignorespaces#1% % Prints the provided keywords
+}
+
+\newcommand{\TLDR}[1]{}
+\newcommand{\TODO}[1]{\textbf{\textcolor[HTML]{FF4500}{TODO: #1}}}
+\newcommand{\NOTE}[1]{\textbf{\textcolor[HTML]{800080}{NOTE: #1}}}
+
+\newcommand{\shorturl}[2]{\href{#1}{#2}}
+
+
+\ifnonanonymous
+  \newcommand{\magnetrepo}{\url{https://github.com/AIQ-Kitware/aiq-magnet}}
+\else
+  %\newcommand{\magnetrepo}{\url{https://tinyurl.com/ye5x5kxn}}
+  %\newcommand{\magnetrepo}{\url{https://anonymous.4open.science/r/aiq-magnet-202D}}
+  %\newcommand{\magnetrepo}{\shorturl{https://anonymous.4open.science/r/aiq-magnet-202D/README.md}{tinyurl.com/ye5x5kxn}}
+  \newcommand{\magnetrepo}{\shorturl{https://anonymous.4open.science/r/aiq-magnet-202D/README.md}{anonymous.4open.science/r/aiq-magnet-202D}}
+\fi
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+% \author{%
+%   Jon Crall \\
+%   Kitware, Inc.\\
+%   Clifton Park, NY \\
+%   \texttt{jon.crall@kitware.com} \\
+%   \And
+%   David Joy \\
+%   Kitware, Inc.\\
+%   Clifton Park, NY \\
+%   \texttt{david.joy@kitware.com} \\
+%   \And
+%   Roderic Collins \\
+%   Kitware, Inc.\\
+%   Clifton Park, NY \\
+%   \texttt{roddy.collins@kitware.com} \\
+%   \And
+%   Benjamin Fenelon \\
+%   Kitware, Inc.\\
+%   Clifton Park, NY \\
+%   \texttt{benjamin.fenelon@kitware.com} \\
+%   \And
+%   Anthony Hoogs \\
+%   Kitware, Inc.\\
+%   Clifton Park, NY \\
+%   \texttt{anthony.hoogs@kitware.com} \\
+%   \And
+%   Brian Hu \\
+%   Kitware, Inc.\\
+%   Clifton Park, NY \\
+%   \texttt{brian.hu@kitware.com} \\
+%   % examples of more authors
+%   % \And
+%   % Coauthor \\
+%   % Affiliation \\
+%   % Address \\
+%   % \texttt{email} \\
+%   % \AND
+%   % Coauthor \\
+%   % Affiliation \\
+%   % Address \\
+%   % \texttt{email} \\
+%   % \And
+%   % Coauthor \\
+%   % Affiliation \\
+%   % Address \\
+%   % \texttt{email} \\
+%   % \And
+%   % Coauthor \\
+%   % Affiliation \\
+%   % Address \\
+%   % \texttt{email} \\
+% }
+
+
+\title{MAGNET: Mathematical Assurance of\\ Generative AI Network Evaluation Toolkit}
+
+\author{%
+  Jon Crall \And David Joy \And Roderic Collins \And
+  Benjamin Fenelon \And Anthony Hoogs \And Brian Hu \\\\
+  Kitware, Inc., Clifton Park, NY \\
+  %\texttt{} \\
+  \texttt{\{jon.crall,david.joy,roddy.collins,}\\
+  \texttt{benjamin.fenelon,anthony.hoogs,brian.hu\}@kitware.com}}
+
+\begin{document}
+
+\maketitle
+{
+\renewcommand{\thefootnote}{}% clear the symbol
+\footnotetext{Accepted at the NeurIPS 2025 Workshop on Evaluating the Evolving LLM Lifecycle.}
+\addtocounter{footnote}{-1}% keep numbering correct for later
+}
+\begin{abstract}
+The DARPA AI %rtificial Intelligence 
+Quantified (AIQ) program seeks to establish %rigorous 
+mathematical foundations for predicting %and guaranteeing % that can predict and guarantee 
+when AI models will succeed or fail and why. Unlike conventional benchmarks which evaluate model capabilities, AIQ emphasizes the evaluation of theoretical claims about model generalization: % themselves: 
+given %explicit 
+assumptions, do theoretical %es a theory's %predicted 
+guarantees 
+hold under %sequestered 
+empirical tests? This paper presents an early-stage vision for the Mathematical Assurance of Generative AI Network Evaluation Toolkit (MAGNET), an open framework designed to map theoretical %formal 
+claims to %reproducible 
+empirical evaluations. While MAGNET is still in the prototype %conceptual design 
+phase, we describe how it will represent claims %guarantees 
+through structured evaluation cards and execute reproducible %controlled 
+experiments to %either 
+verify or falsify those claims. %yield standardized verdicts such as verification, falsification, or inconclusiveness. 
+If successful, MAGNET will allow practitioners to encode a theoretical claim in an evaluation card and rapidly test it on relevant benchmarks at scale, lowering the barrier from theoretical proposal to %rigorous 
+empirical validation. By articulating a vision for MAGNET at the outset of AIQ, we aim to stimulate community discussion and enable a virtuous cycle connecting %on how to rigorousconnect 
+theoretical and empirical work on model generalization. %claims to empirical evaluations. %idence.
+Active development is underway at \magnetrepo{}.
+\end{abstract}
+
+% \TLDR{
+% MAGNET connects theoretical claims about AI model generalization to empirical validation through standardized evaluation cards.
+% }
+%\keywords{benchmarks, empirical validation, generalization theory, open source, foundation models, evaluation frameworks}
+
+\section{Introduction}
+\label{sec:intro}
+
+Recent advances in state-of-the-art AI have shown that it is possible to achieve remarkable results on text, vision, and multimodal tasks~\cite{ni_survey_large_2025}. However, benchmark wins do not necessarily guarantee reliable model performance in high-stakes deployments. While conventional leaderboards %such as GLUE~\cite{wang_glue_multitask_2019}, SuperGLUE~\cite{wang_superglue_stickier_2019}, MMLU~\cite{hendrycks_measuring_massive_2021}, BIG-bench~\cite{srivastava_imitation_game_2023}, and HELM~\citep{lee_holistic_evaluation_2023a} 
+have advanced the breadth and comparability of model evaluation~\cite{wang_glue_multitask_2019,wang_superglue_stickier_2019,hendrycks_measuring_massive_2021,srivastava_imitation_game_2023,lee_holistic_evaluation_2023a}, they are not designed to test theoretical claims about model generalization. As a result, there is a need for novel approaches to predict \emph{what} capabilities models have, \emph{when} models will generalize, \emph{why} they sometimes fail, and \emph{how} theoretical guarantees about model generalization may transfer across data modalities and model scales. %, and compositions.
+
+%Conventional leaderboards such as GLUE~\cite{wang_glue_multitask_2019}, SuperGLUE~\cite{wang_superglue_stickier_2019}, MMLU~\cite{hendrycks_measuring_massive_2021}, BIG-bench~\cite{srivastava_imitation_game_2023}, and HELM~\citep{lee_holistic_evaluation_2023a} have advanced breadth and comparability, but they do not test formal claims. In contrast, 
+The DARPA Artificial Intelligence Quantified (AIQ) program~\cite{shafto_aiq_artificial_2025} emphasizes the evaluation of theoretical claims themselves: given a set of assumptions, does predicted model generalization hold under %on hidden, 
+rigorously controlled evaluations? AIQ is comprised of two coordinated thrusts: Technical Area 1 (TA1), which develops mathematical theories, and Technical Area 2 (TA2), which tests those theories at scale. %Our focus is TA2.
+%
+Under TA2, we introduce the Mathematical Assurance of Generative AI Network Evaluation Toolkit (MAGNET), a framework in the prototype phase %conceptual design
+--- illustrated in \Cref{fig:concept_figure} --- that will map theoretical claims to empirical evaluations. MAGNET aims to reduce friction between theory and empirical validation by providing standardized evaluation cards specifying assumptions, guarantees, and corresponding tests. 
+
+\textbf{Our contributions are threefold}: 
+(1) We frame the evaluation of model generalization as theoretical claim verification --- distinguishing our approach %the assessment of theoretical guarantees 
+from conventional model benchmarking; 
+(2) We introduce MAGNET --- an open framework for translating theoretical claims into structured, reproducible evaluation protocols; and
+(3) We outline a research agenda --- scaling theory-driven evaluations into standardized tests to support systematic progress in model benchmarking and evaluation.
+
+
+% BH: I'm wondering if a general figure here might be useful; e.g. showing theoretical results and empirical results, with MAGNET to help bridge these two.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/aiq_overview-draft4.png}
+    \caption{As part of the DARPA AIQ program, MAGNET bridges the gap between theoretical (TA1) and empirical (TA2) work on model generalization, creating a virtuous cycle that enables refinement of mathematical theories while enhancing traditional benchmarking efforts. Please see text for more details.
+    }
+    \label{fig:concept_figure}
+\end{figure}
+%BH: Could potentially include metrics to the right of the figure
+%BH: Incorporate constraints into evaluation by making it theory/framework-specific; conclude with innovations (could potentially make use of AIQ proposal challenges/innovations)
+%BH: Enumerate 3-4 contributions here.
+
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Benchmarks.}
+Large-scale evaluations such as GLUE~\cite{wang_glue_multitask_2019}, SuperGLUE~\cite{wang_superglue_stickier_2019}, MMLU~\cite{hendrycks_measuring_massive_2021}, BIG-bench~\cite{srivastava_imitation_game_2023}, and HELM~\citep{lee_holistic_evaluation_2023a} %, and HEIM~\cite{liang_holistic_evaluation_2023a} 
+have established community standards for multitask and longitudinal benchmarking.
+For a comprehensive overview on model benchmarking, we refer the reader to~\citet{ni_survey_large_2025}. These frameworks generally emphasize breadth and comparability, but they do not directly test mathematical predictions or guarantees of model generalization. We aim to build on these existing frameworks, using them as tools to produce the benchmark data needed to empirically validate mathematical claims at scale. 
+
+\textbf{Theoretical guarantees.}
+%%%
+%%%% This is an alternative shortened version
+%%%
+% Claim families include: \emph{scaling and predictability} toward downstream performance~\citep{chen_scaling_laws_2024,ruan_observational_scaling_2024,polo_sloth_scaling_2025}; \emph{generalization bounds} via spectral norms and margins~\citep{bartlett_spectrallynormalized_margin_2017,neyshabur_exploring_generalization_2017}, sharpness~\citep{shirishkeskar_largebatch_training_2017,foret_sharpnessaware_minimization_2021}, PAC-Bayes and compression~\citep{dziugaite_computing_nonvacuous_2017,arora_stronger_generalization_2018,jiang_fantastic_generalization_2019}, with recent links to heavy-tailed spectra and kernel consistency~\citep{martin_implicit_selfregularization_2021,acharyya_consistent_estimation_2025}; \emph{adversarial robustness} with certified guarantees and standardized evaluations~\citep{cohen_certified_adversarial_2019,croce_robustbench_standardized_2021,croce_reliable_evaluation_2020}; \emph{training dynamics} via kernel and scaling-limit analyses~\citep{jacot_neural_tangent_2018,bordelon_depthwise_hyperparameter_2024,dey_dont_be_2025}; and \emph{task/benchmark predictability} from few-shot or related tasks~\citep{nguyen_leep_new_2020,you_logme_practical_2021,pacchiardi_100_instances_2024,polo_tinybenchmarks_evaluating_2024,shi_importance_sampling_2025}. Despite heterogeneity, these claims share a common structure—assumptions, a predicted guarantee, and a measurable outcome—which MAGNET’s evaluation cards capture for standardized empirical tests.
+%
+%Several families of theoretical claims about model generalization have been proposed in the literature. Due to space limitations, we only provide a brief overview here:
+Key flavors of theoretical claims in the literature are briefly described:
+%Several families of theoretical claims about model generalization have been proposed:
+
+
+- \emph{Scaling laws.} Predictable power-law relations between loss and scale have been established~\citep{kaplan_scaling_laws_2020,hoffmann_training_computeoptimal_2022}, with extensions toward predicting downstream model performance~\citep{chen_scaling_laws_2024,ruan_observational_scaling_2024,polo_sloth_scaling_2025}.  
+
+- \emph{Generalization bounds.} Predictors of model generalization based on spectral norms and margins~\citep{bartlett_spectrallynormalized_margin_2017,neyshabur_exploring_generalization_2017}, sharpness~\citep{shirishkeskar_largebatch_training_2017,foret_sharpnessaware_minimization_2021}, PAC-Bayes~\citep{dziugaite_computing_nonvacuous_2017,chu_unified_framework_2023}, compression~\citep{arora_stronger_generalization_2018}, and complexity measures~\cite{jiang_fantastic_generalization_2019} have been widely studied. More recent work links generalization to heavy-tailed spectra~\citep{martin_implicit_selfregularization_2021} and kernel consistency~\citep{acharyya_consistent_estimation_2025}.  
+
+- \emph{Adversarial Robustness.} Certified defenses such as randomized smoothing provide formal guarantees of model performance against adversarial perturbations~\citep{cohen_certified_adversarial_2019}, while RobustBench and AutoAttack standardize adversarial attacks and evaluation protocols~\citep{croce_robustbench_standardized_2021,croce_reliable_evaluation_2020}.  
+
+- \emph{Training dynamics.} Mean field theory, neural tangent kernel, and tensor program analyses characterize networks in the infinite-width limit, yielding insight and claims about training dynamics~\citep{schoenholz_deep_information_2017,jacot_neural_tangent_2018,yang_wide_feedforward_2019,bordelon_depthwise_hyperparameter_2024,dey_dont_be_2025}.  
+
+- \emph{Task and benchmark predictability.} Other work studies how to predict performance on new tasks or benchmarks from few-shot samples or related evaluations~\citep{nguyen_leep_new_2020,you_logme_practical_2021,pacchiardi_100_instances_2024,polo_tinybenchmarks_evaluating_2024,shi_importance_sampling_2025}.  
+
+These examples highlight the diversity of theoretical claims that could be made. % --- from scaling laws to spectral bounds to transfer predictability.
+Although heterogeneous in form, they share a common structure: assumptions, a predicted guarantee, and a measurable outcome.
+MAGNET’s proposed evaluation cards (described in more detail in Section~\ref{sec:magnet}) aim to capture this structure, enabling such claims to be tested using standardized evaluation protocols.
+
+
+\section{DARPA AI Quantified (AIQ) Program Overview}
+\label{sec:aiq_overview}
+
+The DARPA Artificial Intelligence Quantified (AIQ) program operates on the core hypothesis that mathematical foundations, combined with advances in measurement and modeling, will allow guaranteeing \emph{what} capabilities an AI model has, \emph{when} they will or will not manifest, and \emph{why}~\citep{shafto_aiq_artificial_2025}. While recent years have seen dramatic advances in large language and
+multimodal models, their behavior remains difficult to predict in ways that can ensure performance in high-stakes applications.
+AIQ addresses this gap by organizing a coordinated research effort to
+develop mathematical theories of generalization (Technical Area 1, TA1)
+and build infrastructure to empirically test these theories at scale
+(Technical Area 2, TA2).
+
+
+\paragraph{Capability levels.}
+AIQ formalizes its objectives around three nested \emph{capability levels}.
+At the most basic level, \emph{specific problems}, the question is
+whether a system gives the correct answer for an individual input--output
+pair (e.g. multiple-choice question answering).
+At the second level, \emph{classes and compositions of problems}, the
+goal is to determine whether performance transfers to similar inputs or
+structured compositions of tasks—for instance, whether success on one
+reasoning step implies success on multi-step compositions.
+At the third level, \emph{natural classes of problems}, the program seeks
+to identify families of problems implicitly supported by a given model
+architecture.
+Examples include convolutional networks naturally aligning with
+translation-invariant tasks in the image domain or transformers with long-range sequence
+dependencies.
+Together, these three levels provide a useful “what, when, and why” framing:
+\emph{what} problems a model is able to solve, \emph{when} those solutions generalize to related cases,
+and \emph{why} certain inductive biases emerge from architectural design.
+
+\paragraph{Evaluation domains.}
+To operationalize these capability levels, AIQ also defines a set of \emph{evaluation
+domains} to help ground the development of mathematical theories around concrete model behaviors.
+The current domains include: (i) training-time dynamics, which focus on
+learning curves, optimization trajectories, and scaling laws;
+(ii) text generation, which encompasses reasoning, factuality, and
+robustness of language models; and (iii) text-to-image generation,
+which targets compositional fidelity and robustness in generative
+vision models.
+These domains provide a structured setting in which TA1 theories can
+be instantiated and tested against real-world model behaviors, with new domains possibly added in the future.
+
+\paragraph{TA1: theories and guarantees.}
+TA1 teams bring a wide range of theoretical and mathematical approaches to AIQ,
+drawing from tools in analysis, geometry, algebra, probability, information
+theory, and scaling.
+Recent examples include scaling-limit analyses of residual networks
+\citep{bordelon_depthwise_hyperparameter_2024}, statistical consistency
+results for kernel embeddings~\citep{acharyya_consistent_estimation_2025}, and
+spectral perspectives on heavy-tailed self-regularization
+\citep{martin_implicit_selfregularization_2021}.
+These seemingly heterogeneous approaches share a common goal: to move beyond
+empirical heuristics toward more formal guarantees of model behavior. However, this diversity of approaches also
+highlights the need for empirical evaluations to accommodate each approach and its assumptions.
+
+\paragraph{TA2: evaluation and verification.}
+In parallel, TA2 teams are developing the software and compute infrastructure required to test and
+validate TA1 theories under realistic conditions and at scale.
+A core requirement is to reduce the friction from a new mathematical
+proposal to a falsifiable empirical test, ensuring reproducibility and
+comparability across different theories.
+MAGNET, our proposed TA2 effort, is designed to meet this need by providing a theoretical
+claim-aware evaluation framework that encodes theoretical statements as
+structured \emph{evaluation cards}, routes them to the appropriate benchmark tasks and
+datasets, and produces standardized outputs that help verify or falsify a particular claim.
+
+\paragraph{Program goals.}
+The AIQ program ultimately aims to deliver mathematically rigorous methods for
+quantifying AI model generalization, providing a basis for safe and reliable deployment in
+high-stakes settings.
+By integrating TA1’s theoretical advances with TA2’s evaluation
+infrastructure, the program seeks to create a virtuous cycle: theories
+can be rapidly tested and refined, empirical results can inspire new
+theory, and standardized output formats ensure that progress is cumulative.
+Next, we discuss how the MAGNET system fits into this broader vision by translating
+theoretical claims into empirical evidence.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{MAGNET System Overview}
+\label{sec:magnet}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/magnet-system-diagram-v2.pdf}
+    \caption{MAGNET system architecture. Evaluation cards encode theoretical claims and capture critical metadata in a human-readable and machine-computable format. The evaluation router and validator transform evaluation cards into executable evaluations, mapping them onto relevant benchmarks. Finally, benchmark generation leverages scalable compute infrastructure to carry out tests, with the outputs being structured reports and AIQ program metrics. Gray boxes indicate theoretical inputs or output metrics.
+    }
+    \label{fig:system_diagram}
+\end{figure}
+
+MAGNET (\textbf{M}athematical \textbf{A}ssurance of \textbf{G}enerative AI
+\textbf{N}etwork \textbf{E}valuation \textbf{T}oolkit) is our proposed system that implements
+theoretical claim evaluation. % within AIQ.
+Unlike conventional benchmarks which measure model performance, MAGNET is
+designed to \emph{test theoretical guarantees themselves}.
+The system accepts structured \emph{evaluation cards}, maps them to available
+models and datasets, enforces constraints, executes experiments, and produces
+standardized outputs.
+Figure~\ref{fig:system_diagram} summarizes the system architecture.
+
+\paragraph{Claim-aware evaluation cards.}
+Evaluation cards encode a theoretical claim in both natural and formal
+representations, together with assumptions, datasets, model families, metrics,
+and constraints.
+Cards may state, for example, that scaling from a 100M to a 1B parameter model
+should yield a predictable accuracy change, or that performance on one
+benchmark predicts another. We provide key desiderata for evaluation cards in Appendix~\ref{app:evaluation-card-desiderata} and an example mock evaluation card in Appendix~\ref{app:mock-evaluation-card}.
+
+\paragraph{Evaluation routing and execution.}
+The evaluation router determines how to instantiate tests for a theoretical claim, identifying which parts can
+be satisfied with existing benchmarks (e.g.\ HELM~\cite{lee_holistic_evaluation_2023a}, BIG-bench~\cite{srivastava_imitation_game_2023}) and which require
+new experiments.
+Constraints --- such as data contamination checks, model licensing, or compute budgets --- are
+enforced by an evaluation validator.
+For claims that may require extensive compute, the router can generate executable pipelines up to
+full pre-training jobs (e.g.\ using the Marin platform~\citep{hall_introducing_marin_2025}), even
+if they are not run immediately, providing cost estimates alongside execution
+plans. We also provide key desiderata for the evaluation router in Appendix~\ref{app:evaluation-router-desiderata}.
+
+\paragraph{Standardized reporting.}
+Outputs of an evaluation are returned as structured reports that include key metrics.
+Each report compares theoretical predictions against empirical results,
+with standardized outputs and verdicts on theoretical claims
+(e.g. \textsc{Verified}, \textsc{Falsified}, \textsc{Inconclusive}).
+Reports may also include uncertainty and power estimates, enabling
+comparison across different approaches.
+
+\paragraph{Open implementation.}
+MAGNET will be implemented as an open-source framework, with reproducibility 
+as a first-class principle.
+All cards, benchmarks, and results are versioned and shareable, allowing the
+community to propose new claims and extend the system beyond the AIQ program.
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+% BH: Should we have an explicit limitations section here?
+
+The AIQ program is an ambitious effort to bring
+mathematical rigor to the evaluation of modern AI systems.
+TA1 teams are developing diverse theoretical approaches, while TA2
+systems such as MAGNET provide the infrastructure to test and evaluate these theories
+empirically.
+%
+What makes AIQ distinctive is that it evaluates \emph{theories}, not just
+models.
+The challenge is to map heterogeneous theoretical claims---from scaling laws to spectral weight properties---into concrete, falsifiable tests, while respecting the assumptions and
+constraints each theory imposes.
+This requires reusing existing benchmarks when possible, running new
+experiments where necessary, and producing standardized outputs that allow
+for comparison across approaches. Importantly, one limitation we note is that our work is still at an early stage: the architecture is defined, evaluation cards
+are prototyped, and initial routing mechanisms are being designed.
+
+MAGNET is being developed as an open-source framework, with all software, evaluation
+cards, and generated benchmarks intended for public release.
+By lowering the barrier between theoretical ideas and empirical validation,
+we hope to foster a broad research community that can propose, test, and refine
+theories on model generalization at scale.
+The AIQ program has just begun, but its vision is clear: to establish a principled,
+reproducible pathway for connecting theories with the measured
+behavior of foundation models. We invite workshop participants to contribute new theoretical claims as
+evaluation cards, helping to shape an open and shared testbed for theory-driven evaluation and benchmarking.
+
+\ifuseacknowledgement
+\section*{Acknowledgment}
+This material is based upon work supported by the Defense Advanced Research Project Agency (DARPA) under Contract No. HR001125CE017. Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the Defense Advanced Research Project Agency (DARPA).
+\else
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{\small
+\bibliographystyle{abbrvnat}
+\bibliography{citations}
+}
+
+\ifuseappendix
+\appendix
+
+\section{Broader Impact}
+The main positive impact of MAGNET, if successful, is to provide a principled foundation for
+confidently deploying AI systems in high-stakes scenarios by grounding decisions in verified
+theoretical guarantees. The main negative risk is that these guarantees could be misinterpreted
+or used improperly as justification to deploy systems before they are truly ready, leading to
+overconfidence and potential failures. We therefore emphasize that all evaluations are explicitly
+conditioned on stated assumptions, and that proper interpretation of guarantees is as important
+as their formal validation.
+
+\section{MAGNET System Design}
+\label{sec:appendix}
+
+This appendix expands on the technical design of MAGNET.
+In particular, we sketch the structure of an \emph{evaluation card} and outline how a router might map a card to available benchmarks and
+new experiments.
+
+\subsection{Desiderata for Evaluation Cards}
+\label{app:evaluation-card-desiderata}
+An evaluation card should serve as a standardized container that bridges
+theoretical claims and empirical tests. We identify several desiderata:
+
+\begin{itemize}
+\item \textbf{Human- and machine-readable.} Claims should be expressible in
+natural language, but also convertible into formal logic (e.g.\ a Python function or a Lean~4
+proposition~\citep{moura_lean_4_2021}) suitable for programmatic validation.
+
+\item \textbf{Cryptographic attestations.} Conversions between natural and
+formal statements should be accompanied by verifiable attestations to ensure
+trust and auditability.
+
+\item \textbf{Content-addressability.} All datasets, splits, models, and
+checkpoints should be referenced via hashes or unique IDs to guarantee
+reproducibility.
+
+\item \textbf{Free-variable binding.} Formal claims are expressed as functions
+with free variables; the card must specify how these are bound to experimental
+artifacts such as dataset splits or model checkpoints.
+
+\item \textbf{Constraints and assumptions.} Cards should encode auxiliary
+assumptions (e.g.\ compute budget, contamination exclusion, licensing,
+privacy) that must hold for the claim to be valid.
+
+\item \textbf{Metrics and verdicts.} Cards should specify measurable outcomes,
+tolerances, and confidence thresholds, together with standardized verdicts
+(\textsc{Verified}, \textsc{Falsified}, \textsc{Inconclusive}).
+\end{itemize}
+
+These desiderata aim to ensure that evaluation cards are flexible enough to
+capture heterogeneous claims, yet strict enough to support reproducible,
+auditable testing.
+
+\subsection{Desiderata for the Router}
+\label{app:evaluation-router-desiderata}
+The router is the mechanism that interprets an evaluation card and generates
+an executable plan. Its design should satisfy several desiderata:
+
+\begin{itemize}
+\item \textbf{Manual-first, automation-ready.} A fully manual mapping path must
+always be available, even if tedious, to ensure the framework is usable during
+early development and for complex edge cases. Automation (e.g.\ LLM-assisted
+codification of claims) can be introduced gradually as the framework
+matures.
+
+\item \textbf{Deterministic and auditable.} Routing decisions should be
+deterministic given the same inputs and accompanied by logs or attestations
+that can be verified post hoc.
+
+\item \textbf{Benchmark awareness.} The router should identify which parts of
+a claim can be satisfied by existing benchmark results (e.g.\ HELM, BIG-bench)
+and which require new experiments.
+
+\item \textbf{DAG construction.} When new experiments are required, the router
+should generate a directed acyclic graph (DAG) of tasks specifying model runs,
+dataset splits, and evaluation metrics. 
+For large-scale claims, the router should always resolve to a concrete sequence of executable commands—such as training runs on platforms like Marin~\citep{hall_introducing_marin_2025}. Even if resources are unavailable to execute the pipeline, MAGNET can still expose what would need to be done and estimate the associated cost.
+
+\item \textbf{Constraint checking.} Routing must respect the constraints
+encoded in the card, such as compute budgets, contamination exclusions, or
+dataset licensing.
+
+\item \textbf{Extensibility.} The router should support plug-in modules for new
+tasks, metrics, or backends without requiring redesign of the core schema.
+\end{itemize}
+
+\subsection{Mock Evaluation Card}
+\label{app:mock-evaluation-card}
+An \emph{evaluation card} encodes a theoretical claim, the assets required to test
+it, and the rules for returning a verdict. The card must be both human-readable
+and machine-checkable, allowing natural language claims to be translated into
+formal propositions and bound to experimental data. Figure~\ref{fig:yaml_card}
+shows a mock card in YAML format.
+
+Our initial card design contains several key components:
+\begin{itemize}
+\item \textbf{Claim.} A falsifiable statement, ideally encodable as a Lean~4 proposition~\citep{moura_lean_4_2021} (although any programming language would work). Cards may include both a natural-language version and a formal version, with cryptographic attestations certifying the mapping (\eg{} with OpenPGP signatures \cite{finney_openpgp_message_2007}).
+\item \textbf{Datasets.} Content-addressable identifiers (or with SHA-256 hashes) for admissible datasets and splits, ensuring reproducibility.
+\item \textbf{Models.} References to model families, checkpoints, and training recipes.
+\item \textbf{Constraints.} Assumptions such as compute budgets, contamination exclusion, privacy, and licensing requirements.
+\item \textbf{Metrics.} Quantities to be measured or bounded, with thresholds for success/failure.
+\item \textbf{Symbols.} A table binding free variables in the formal claim to datasets, models, or metrics.
+\item \textbf{Outputs.} Standardized verdicts (\textsc{Verified}, \textsc{Falsified}, \textsc{Inconclusive}) and report formats.
+\end{itemize}
+
+\begin{figure}[h]
+\begin{minted}[fontsize=\scriptsize, breaklines, frame=single, bgcolor=mintbg]{yaml}
+# Truncated mock evaluation card for scaling-law prediction
+version: 0.2
+id: scaling-law-toy-001
+title: "Power-law extrapolation of accuracy from small to large scale"
+
+claim:
+  natural: |
+    For family F on dataset D (HELM:MMLU@test), there exist parameters a,b,α>0
+    such that A(N)=a-b*N^{-α} interpolates accuracies at N∈{10M,100M} and its
+    extrapolation at N=1B differs from the sequestered accuracy by ≤ τ.
+  lean4: |
+    def within_tol_params
+      (A10 A100 A1B_true N10 N100 N1B τ a b α : ℝ) : Prop :=
+      A10  = a - b*N10 ^ (-α) ∧
+      A100 = a - b*N100 ^ (-α) ∧
+      |(a - b*N1B ^ (-α)) - A1B_true| ≤ τ
+  attestations:
+    - source: "llm-parser-v2"
+      validator: "human-itl-review-chain:2e81...5e764010"
+      status: "pending"
+
+datasets:
+  - id: helm:MMLU@test
+    sha256: "6a09e6...c67178f2"
+models:
+  family: "Pythia"
+  checkpoints:
+    - name: "pythia-10M"
+      sha256: "e3b0c4...abbcb0ba"
+constraints:
+  compute_budget: { measurable: "gpu_hours", threshold: 200 }
+metrics:
+  - name: "accuracy"
+    tolerance: 0.02
+    confidence: 0.95
+outputs:
+  verdict: [Verified, Falsified, Inconclusive]
+\end{minted}
+
+\caption{Mock evaluation card in YAML format. Cards include natural and formal claims,
+datasets, models, constraints, metrics, and outputs. 
+The exact form of the formal claim is simplified and symbol mappings are excluded for clarity.}
+\label{fig:yaml_card}
+\end{figure}
+
+\subsection{Routing a Claim}
+Given a card, MAGNET must route it to available benchmarks and determine what
+additional experiments are required. For example, observational scaling laws
+can be partially tested using precomputed results in HELM~\citep{liang_holistic_evaluation_2023a},
+with missing points filled by running new evaluations. Routing thus involves
+matching the schema in the card (datasets, models, metrics, constraints) to
+available assets, prioritizing which dataset+model combinations to actually run,
+constructing a directed acyclic graph of tasks to execute,
+and binding experimental outputs back to the free variables in the claim.
+
+Early in the program, this routing will be performed manually. Over time, we
+plan to semi-automate it: parsing natural-language claims with LLMs, generating
+formal propositions, and validating each step with cryptographic attestations.
+This approach ensures that routing decisions are both interpretable and
+auditable, and that evaluation can proceed even while the system is under
+construction.
+
+\subsection{Summary}
+The evaluation card provides a standardized container for claims, assets, and
+verdicts. The router turns this specification into an executable pipeline that
+either leverages existing benchmark results or launches new experiments.
+Together, these components embody MAGNET’s goal of reducing friction from
+theory to empirical validation.
+
+Our system is currently under active development and is hosted on GitHub at \magnetrepo. 
+We remind the reader that our starting point is to manually make the connections 
+between a theory and its empirical validation, with the goal of building up automations 
+as the system matures.
+
+\else
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{paper-checklist}
+
+
+\end{document}

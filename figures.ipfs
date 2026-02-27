@@ -1,0 +1,17 @@
+type: ipfs-sidecar
+cid: bafybeig3rhjtvnx7z7xgna5l2ssxhplgxm7a2jwcba66ohd6g5kyr7vl7y
+rel_path: figures
+size: 936.13 KiB
+num_items: 7
+add_config:
+  path: figures
+  name: neurips-workshop-2025/figures
+  recursive: true
+  progress: true
+  cid_version: 1
+  raw_leaves: false
+  only_hash: false
+  pin: true
+  sidecar: true
+add_datetime: 2026-02-27T095733-5
+add_duration: 1.6660712320008315
